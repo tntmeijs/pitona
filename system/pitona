@@ -1,0 +1,11 @@
+### ############################## ###
+### NGINX configuration for PiTona ###
+### ############################## ###
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://localhost:5000;
+    }
+}

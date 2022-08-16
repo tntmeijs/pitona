@@ -1,0 +1,14 @@
+### ######################################## ###
+### Systemd service configuration for PiTona ###
+### ######################################## ###
+
+[Unit]
+Description=PiTona webserver
+Documentation=https://github.com/tntmeijs/pitona
+
+[Service]
+Type=simple
+ExecStart=/home/pi/server
+
+[Install]
+WantedBy=multi-user.target
