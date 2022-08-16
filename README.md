@@ -1,8 +1,34 @@
 # PiTona
+<a title="NathanLee at English Wikipedia, Public domain, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:TriumphDaytona675Side.jpg"><img width="512" alt="TriumphDaytona675Side" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/TriumphDaytona675Side.jpg/512px-TriumphDaytona675Side.jpg"></a>
+
 Welcome to the PiTona project! This project is an educational project to learn more about the OBD2
 protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 
-Currently, this project is still very much in a pre-alpha phase. Please check back later. 
+## Motivation
+When I'm not writing code, I enjoy being out and about on my beloved Triump Daytona 675.
+
+Unfortunately, I recently saw the infamous "check engine" light come on. Since I do not have access
+to any OBD2 tools to read the ECU, I figured it'd be fun to write a little something myself. And
+thus, the "PiTona" project was born!
+
+I don't know how far I'm going to take this, but ultimately I'd like to at least be able to read my
+bike's error code. Once I manage to do that, I'll see how far I can push my skills.
+
+## Goals
+The main purpose of this project is to see if it is possible to read OBD2 data from the onboard
+ECU. However, simply logging data to a console is rather boring and too easy. To make things a
+little more interesting, I'd like to eventually build an Android application that can display the
+real-time data of the motorcycle's ECU.
+
+If all goes well, I'd like to turn the application into a very neat tool to analyse my riding data.
+It'd be awesome to have access to statistics such as lean angle, top speed, averge speed, GPS data,
+and fuel efficiency!
+
+## Technology stack
+- [Raspberry Pi](https://www.raspberrypi.com/): hardware on which this whole thing runs
+- [.NET](https://dotnet.microsoft.com/): programming language in which the webserver is written
+- [React Native](https://reactnative.dev/): framework used to write the Android application
+- [Bulma](https://bulma.io/): super neat CSS framework to make everything look pretty
 
 ## Disclaimer
 Use this project at your own risk. There is a very real possibility that sending OBD2 commands,
