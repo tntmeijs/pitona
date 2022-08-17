@@ -14,7 +14,7 @@ protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
    1. Before installing, open the "advanced settings" (settings icon in the bottom right).
    2. Make sure to enable SSH and configure a network connection.
 3. Download a webserver [release](https://github.com/tntmeijs/pitona/releases).
-4. Copy `/raspberrypi` and all of its contents to the `/home/pi` folder on your Raspberry Pi.
+4. Copy `/install_pitona` and all of its contents to the `/home/pi` folder on your Raspberry Pi.
    1. On Windows, you could use [WinSCP](https://winscp.net/) to transfer your files.
 5. Copy the `server` binary to `/home/pi`.
 6. With everything in place, execute `./install.sh` on your Raspberry Pi.
@@ -68,8 +68,8 @@ into it using your favourite SSH agent. If you have used the default settings, t
 
 > How can I change my DNS, AP, or other settings?
 
-Either modify the configuration files in `/raspberrypi` before you run the installation script, or
-SSH into your Raspberry Pi and manually update the relevant configuration file(s).
+Either modify the configuration files in `/install_pitona` before you run the installation
+script, or SSH into your Raspberry Pi and manually update the relevant configuration file(s).
 
 ## Disclaimer
 Use this project at your own risk. There is a very real possibility that sending OBD2 commands,
