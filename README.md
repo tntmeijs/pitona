@@ -4,6 +4,25 @@
 Welcome to the PiTona project! This project is an educational project to learn more about the OBD2
 protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 
+## Prerequisites
+- Raspberry Pi with WiFi and USB connectivity.
+- Pre 2013 Triumph Daytona 675 (these ECUs are not as locked-down as the newer ones).
+
+## Installation
+1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
+2. Install the Debian Lite 64-bit operating system.
+   1. Before installing, open the "advanced settings" (settings icon in the bottom right).
+   2. Make sure to enable SSH and configure a network connection.
+3. Download a webserver [release](https://github.com/tntmeijs/pitona/releases).
+4. Copy `/raspberrypi` and all of its contents to the `/home/pi` folder on your Raspberry Pi.
+   1. On Windows, you could use [WinSCP](https://winscp.net/) to transfer your files.
+5. Copy the `server` binary to `/home/pi`.
+6. With everything in place, execute `./install.sh` on your Raspberry Pi.
+7. Press `[Enter]` to reboot the Raspberry Pi after the script finishes executing.
+8. Give the device a minute or so to boot.
+9. You should now see a new network with `PiTona_675` as its SSID.
+10. Congratulations, your Raspberry Pi is now configured to run PiTona!
+
 ## Motivation
 When I'm not writing code, I enjoy being out and about on my beloved Triump Daytona 675.
 
@@ -29,6 +48,28 @@ and fuel efficiency!
 - [.NET](https://dotnet.microsoft.com/): programming language in which the webserver is written
 - [React Native](https://reactnative.dev/): framework used to write the Android application
 - [Bulma](https://bulma.io/): super neat CSS framework to make everything look pretty
+
+## Help
+> Services will not boot after updating the configuration files, even though the files are correct.
+
+Check if your line endings are correct. The files should use `LF` line endings. If you save the
+files using a Windows machine, chances are they are using `CRLF` line endings.
+
+> I do not see the Raspberry Pi's network after rebooting.
+
+Connect a keyboard and monitor to your Raspberry Pi to troubleshoot. The `journalctl` command might
+come in handy to determine what exactly is failing.
+
+> How can I SSH into my Raspberry Pi after installing PiTona?
+
+PiTona is built to run in an isolated local network. Simply connect to your Raspberry Pi and SSH
+into it using your favourite SSH agent. If you have used the default settings, try to SSH into
+`pi@gw.wlan`.
+
+> How can I change my DNS, AP, or other settings?
+
+Either modify the configuration files in `/raspberrypi` before you run the installation script, or
+SSH into your Raspberry Pi and manually update the relevant configuration file(s).
 
 ## Disclaimer
 Use this project at your own risk. There is a very real possibility that sending OBD2 commands,
