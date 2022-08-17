@@ -17,11 +17,14 @@ protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 4. Copy `/install_pitona` and all of its contents to the `/home/pi` folder on your Raspberry Pi.
    1. On Windows, you could use [WinSCP](https://winscp.net/) to transfer your files.
 5. Copy the `server` binary to `/home/pi`.
-6. With everything in place, execute `./install.sh` on your Raspberry Pi.
-7. Press `[Enter]` to reboot the Raspberry Pi after the script finishes executing.
-8. Give the device a minute or so to boot.
-9. You should now see a new network with `PiTona_675` as its SSID.
-10. Congratulations, your Raspberry Pi is now configured to run PiTona!
+6. Ensure you can execute the webserver and installation script.
+   1. Run `sudo chmod +x install_pitona/install.sh`
+   2. Run `sudo chmod +x server`
+7. With everything in place, execute `sudo ./install.sh` as on your Raspberry Pi.
+8. Press `[Enter]` to reboot the Raspberry Pi after the script finishes executing.
+9.  Give the device a minute or so to boot.
+10. You should now see a new network with `PiTona_675` as its SSID.
+11. Congratulations, your Raspberry Pi is now configured to run PiTona!
 
 ## Motivation
 When I'm not writing code, I enjoy being out and about on my beloved Triump Daytona 675.
