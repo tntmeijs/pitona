@@ -19,7 +19,7 @@ fi
 # HostAPD is used to turn this device into an access point
 echo "====================="
 echo "Installing HostAPD..."
-echo "=====================\n"
+echo "====================="
 apt install hostapd -y
 systemctl unmask hostapd
 systemctl enable hostapd
@@ -27,13 +27,13 @@ systemctl enable hostapd
 # Dnsmasq is used for network management services (DNS / DHCP)
 echo "====================="
 echo "Installing Dnsmasq..."
-echo "=====================\n"
+echo "====================="
 apt install dnsmasq -y
 
 # Static IP address configuration
 echo "============================================="
 echo "Configuring device to use a static IP address"
-echo "=============================================\n"
+echo "============================================="
 cp dhcpcd.conf /etc/dhcpcd.conf
 
 # Dnsmasq configuration
@@ -46,20 +46,20 @@ rfkill unblock wlan
 # Access point configuration
 echo "============================================="
 echo "Configuring device as a wireless access point"
-echo "=============================================\n"
+echo "============================================="
 cp hostapd.conf /etc/hostapd/hostapd.conf
 
 # Add the webserver as a service
 echo "===================================================================="
 echo "Adding the webserver as a Linux service to ensure it runs on startup"
-echo "====================================================================\n"
+echo "===================================================================="
 cp pitona.service /etc/systemd/system/pitona.service
 systemctl enable pitona
 
 # Reboot to ensure everything works as intended
 echo "========="
 echo "All done!"
-echo "=========\n"
+echo "========="
 echo "The device will now reboot - please look for a new WiFi network once it comes back online"
 
 read -p "Press enter to continue"
