@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using server.Models.System;
+using Server.Models.System;
 
 namespace server.Controllers;
 

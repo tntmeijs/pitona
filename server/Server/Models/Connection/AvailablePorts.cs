@@ -1,4 +1,4 @@
-namespace server.Models.Connection;
+namespace Server.Models.Connection;
 
 public class AvailablePorts
 {

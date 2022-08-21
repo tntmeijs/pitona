@@ -1,7 +1,7 @@
 using System.IO.Ports;
-using server.Utility;
+using Server.Utility;
 
-namespace server.Services;
+namespace Server.Services;
 
 public class SerialConnectionDiscoveryService
 {

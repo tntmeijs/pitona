@@ -1,6 +1,6 @@
 using System.IO.Ports;
 
-namespace server.Utility;
+namespace Server.Utility;
 
 public class SerialConnection : IDisposable
 {

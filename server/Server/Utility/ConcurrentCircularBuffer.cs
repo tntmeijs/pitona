@@ -1,4 +1,4 @@
-namespace server.Utility;
+namespace Server.Utility;
 
 public class ConcurrentCircularBuffer<T> where T : class
 {

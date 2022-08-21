@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using server.Models.Connection;
-using server.Services;
+using Server.Models.Connection;
+using Server.Services;
 
 namespace server.Controllers;
 

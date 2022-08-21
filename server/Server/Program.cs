@@ -1,4 +1,4 @@
-using server.Services;
+using Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
