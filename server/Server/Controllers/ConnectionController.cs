@@ -8,40 +8,40 @@ namespace server.Controllers;
 [Route("connection")]
 public class ConnectionController : ControllerBase
 {
-    private readonly SerialConnectionDiscoveryService serialConnectionService;
+    private readonly Obd2ConnectionService serialConnectionService;
 
-    public ConnectionController(SerialConnectionDiscoveryService serialConnectionService) => this.serialConnectionService = serialConnectionService;
+    public ConnectionController(Obd2ConnectionService serialConnectionService) => this.serialConnectionService = serialConnectionService;
 
     [HttpGet("ports")]
-    public ActionResult<AvailablePorts> ListAvailableSerialPorts()
+    public async Task<ActionResult<AvailablePorts>> ListAvailableSerialPorts()
     {
         return new AvailablePorts
         {
-            PortNames = serialConnectionService.GetAllAvailablePorts()
+            PortNames = await serialConnectionService.GetAllAvailablePorts()
         };
     }
 
     [HttpPost("ports")]
-    public async Task<EmptyResult> SelectActivePort(SelectedPort selectedPort)
+    public async Task<ActionResult> SelectActivePort(SelectedPort selectedPort)
     {
         if (!await serialConnectionService.ChangePort(selectedPort.PortName))
         {
-            Response.StatusCode = 409;
+            return BadRequest();
         }
 
-        return new EmptyResult();
+        return Ok();
     }
 
     [HttpDelete("ports")]
-    public async Task<EmptyResult> Disconnect()
+    public async Task<ActionResult> Disconnect()
     {
         var success = await serialConnectionService.Disconnect();
 
         if (!success)
         {
-            Response.StatusCode = 409;
+            return BadRequest();
         }
 
-        return new EmptyResult();
+        return Ok();
     }
 }

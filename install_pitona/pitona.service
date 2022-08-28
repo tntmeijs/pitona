@@ -8,7 +8,7 @@ Documentation=https://github.com/tntmeijs/pitona
 
 [Service]
 Type=simple
-ExecStart=/home/pi/server --urls="http://*.80"
+ExecStart=/home/pi/Server --urls="http://*.80"
 
 [Install]
 WantedBy=multi-user.target

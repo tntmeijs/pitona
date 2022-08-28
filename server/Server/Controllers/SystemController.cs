@@ -10,6 +10,6 @@ public class SystemController : ControllerBase
     [HttpGet("status")]
     public ActionResult<StatusModel> GetStatus()
     {
-        return new StatusModel { CpuTemperature = 69420.0d };
+        return Ok(new StatusModel { CpuTemperature = 69420.0d });
     }
 }

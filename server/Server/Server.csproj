@@ -4,9 +4,10 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
-    <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Release'">true</PublishReadyToRun>
+    <!-- Workaround: https://github.com/dotnet/runtime/issues/63187#issuecomment-1193164280 -->
+    <!-- <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile> -->
+    <!-- <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained> -->
+    <!-- <PublishReadyToRun Condition="'$(Configuration)' == 'Release'">true</PublishReadyToRun> -->
   </PropertyGroup>
 
   <ItemGroup>

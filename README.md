@@ -19,7 +19,7 @@ protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 5. Copy the `server` binary to `/home/pi`.
 6. Ensure you can execute the webserver and installation script.
    1. Run `sudo chmod +x install_pitona/install.sh`
-   2. Run `sudo chmod +x server`
+   2. Run `sudo chmod +x Server`
 7. With everything in place, execute `sudo ./install.sh` as on your Raspberry Pi.
 8. Press `[Enter]` to reboot the Raspberry Pi after the script finishes executing.
 9.  Give the device a minute or so to boot.

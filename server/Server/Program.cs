@@ -5,7 +5,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 // Add services to the container.
-builder.Services.AddSingleton<SerialConnectionDiscoveryService>();
+builder.Services.AddSingleton<Obd2ConnectionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
