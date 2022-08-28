@@ -8,24 +8,6 @@ protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 - Raspberry Pi with WiFi and USB connectivity.
 - Pre 2013 Triumph Daytona 675 (these ECUs are not as locked-down as the newer ones).
 
-## Installation
-1. Download [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
-2. Install the Debian Lite 64-bit operating system.
-   1. Before installing, open the "advanced settings" (settings icon in the bottom right).
-   2. Make sure to enable SSH and configure a network connection.
-3. Download a webserver [release](https://github.com/tntmeijs/pitona/releases).
-4. Copy `/install_pitona` and all of its contents to the `/home/pi` folder on your Raspberry Pi.
-   1. On Windows, you could use [WinSCP](https://winscp.net/) to transfer your files.
-5. Copy the `server` binary to `/home/pi`.
-6. Ensure you can execute the webserver and installation script.
-   1. Run `sudo chmod +x install_pitona/install.sh`
-   2. Run `sudo chmod +x Server`
-7. With everything in place, execute `sudo ./install.sh` as on your Raspberry Pi.
-8. Press `[Enter]` to reboot the Raspberry Pi after the script finishes executing.
-9.  Give the device a minute or so to boot.
-10. You should now see a new network with `PiTona_675` as its SSID.
-11. Congratulations, your Raspberry Pi is now configured to run PiTona!
-
 ## Motivation
 When I'm not writing code, I enjoy being out and about on my beloved Triump Daytona 675.
 
@@ -48,7 +30,7 @@ and fuel efficiency!
 
 ## Technology stack
 - [Raspberry Pi](https://www.raspberrypi.com/): hardware on which this whole thing runs
-- [.NET](https://dotnet.microsoft.com/): programming language in which the webserver is written
+- [Kotlin](https://kotlinlang.org/): programming language in which the webserver is written
 - [React Native](https://reactnative.dev/): framework used to write the Android application
 - [Bulma](https://bulma.io/): super neat CSS framework to make everything look pretty
 
