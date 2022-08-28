@@ -2,7 +2,7 @@ openapi: 3.0.3
 
 info:
   title: PiTona
-  description: API to interact with a Triumpth Daytona 675 motorcycle's ECU over OBD-II
+  description: API to interact with a Triumpth Daytona 675 motorcycle"s ECU over OBD-II
   contact:
     name: Tahar Meijs
     url: https://github.com/tntmeijs/pitona/issues
@@ -24,6 +24,8 @@ servers:
 tags:
   - name: System
     description: Raspberry Pi system information
+  - name: Serial
+    description: Serial port connection management
 
 paths:
   /api/v1/system/status:
@@ -38,7 +40,78 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SystemInformationResponseV1'
+                $ref: "#/components/schemas/SystemInformationResponseV1"
+
+  /api/v1/serial/ports:
+    get:
+      tags:
+        - Serial
+      operationId: getAllSerialPortNames
+      description: Returns all serial port names found on the system
+      responses:
+        200:
+          description: Serial ports
+          content:
+            application/json:
+              schema:
+                required:
+                  - ports
+                properties:
+                  ports:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - "COM1"
+                      - "COM2"
+                      - "COM3"
+                      - "COM4"
+    post:
+      tags:
+        - Serial
+      operationId: connectToSerialPortWithName
+      description: Requests the system to open a connection to a serial port
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - port
+              properties:
+                port:
+                  type: string
+                  example: "COM1"
+      responses:
+        200:
+          description: Successfully connected to the specified serial port
+        400:
+          description: The requested serial port could not be found
+        409:
+          description: The requested serial port is already in use
+    delete:
+      tags:
+        - Serial
+      operationId: disconnectFromSerialPortWithName
+      description: Requests the system to close a serial port's connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - port
+              properties:
+                port:
+                  type: string
+                  example: "COM1"
+      responses:
+        200:
+          description: Successfully disconnected from the specified serial port
+        400:
+          description: The requested serial port could not be found
+        409:
+          description: The requested serial port is already in use
 
 components:
   schemas:
