@@ -1,0 +1,59 @@
+openapi: 3.0.3
+
+info:
+  title: PiTona
+  description: API to interact with a Triumpth Daytona 675 motorcycle's ECU over OBD-II
+  contact:
+    name: Tahar Meijs
+    url: https://github.com/tntmeijs/pitona/issues
+  license:
+    name: MIT
+    url: https://github.com/tntmeijs/pitona/blob/master/LICENSE.md
+  version: 0.0.1
+
+externalDocs:
+  description: Project homepage
+  url: https://github.com/tntmeijs/pitona
+
+servers:
+  - url: http://localhost
+    description: development
+  - url: http://192.168.4.1
+    description: Raspberry Pi local IP address
+
+tags:
+  - name: System
+    description: Raspberry Pi system information
+
+paths:
+  /api/v1/system/status:
+    get:
+      tags:
+        - System
+      operationId: getSystemStatus
+      description: Returns Raspberry Pi system information
+      responses:
+        200:
+          description: System status information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemInformationResponseV1'
+
+components:
+  schemas:
+    SystemInformationResponseV1:
+      title: System Information Response V1
+      description: Raspberry Pi system information
+      required:
+        - cpuTemperature
+        - timestamp
+      properties:
+        cpuTemperature:
+          type: number
+          format: double
+          example: 24.08
+        timestamp:
+          type: integer
+          format: int64
+          example: 901984800
