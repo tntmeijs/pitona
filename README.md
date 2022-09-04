@@ -61,3 +61,33 @@ Use this project at your own risk. There is a very real possibility that sending
 without an understanding of what they do, will result in a broken ECU. This project is not
 malicious in any way, shape, or form... however, I will not be held responsible for any damage,
 issues, or other problems that might arise from the use of this software.
+
+# Development log
+## September
+### 4th of September 2022 🏆
+- Implemented simple serial communication logic
+- Implemented endpoints to communicate with the server
+- Managed to send commands to the ECU
+  - `0100` returns `30313030`, which indicates the PIDs supported by this ECU
+  - `03` returns `3033`, which refers to a status code, but I have not been able to decode it yet
+
+![first ECU response](media/first_time_reading_ecu.png)
+
+### 2<sup>nd</sup> of September 2022
+- Switched from Kotlin / Spring Boot to Go
+
+## August
+### 28<sup>th</sup> of August 2022
+- Switched from C# / .NET to Kotlin / Spring Boot
+
+### 21<sup>st</sup> of August 2022
+- Add circular buffer implementation
+- Add unit tests
+
+### 20<sup>th</sup> of August 2022
+- Add serial port reading logic
+
+### 16<sup>th</sup> of August 2022
+- Project set-up
+- Simple .NET server
+- Tried to turn the Raspberry Pi into a local access point
