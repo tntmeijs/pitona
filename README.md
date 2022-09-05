@@ -64,7 +64,11 @@ issues, or other problems that might arise from the use of this software.
 
 # Development log
 ## September
-### 4th of September 2022 🏆
+### 5<sup>th</sup> of September 2022
+- Major refactor of the codebase
+- New structure makes it easier to add new functionality
+
+### 4<sup>th</sup> of September 2022 🏆
 - Implemented simple serial communication logic
 - Implemented endpoints to communicate with the server
 - Managed to send commands to the ECU
