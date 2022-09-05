@@ -8,6 +8,8 @@ Documentation=https://github.com/tntmeijs/pitona
 
 [Service]
 Type=simple
+RestartSec=10
+Restart=always
 ExecStart=/home/pi/pitona
 
 [Install]
