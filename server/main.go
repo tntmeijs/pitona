@@ -15,12 +15,13 @@ func main() {
 	port := 80
 
 	if slices.Contains(args, "-d") || slices.Contains(args, "--debug") {
+		log.Println("Debugging mode has been enabled")
 		isDebug = true
 		port = 8080
 	}
 
 	instance := obdii.Instance{}
-	instance.Connect()
+	instance.Connect(isDebug)
 	defer instance.Disconnect()
 
 	server := api.ApiServer{ObdiiInstance: &instance}

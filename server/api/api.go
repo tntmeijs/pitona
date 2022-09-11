@@ -35,7 +35,6 @@ func (apiServer *ApiServer) Start(isDebug bool, port int) {
 
 	// For debugging purposes only
 	if isDebug {
-		log.Println("Debugging mode has been enabled")
 		address = "localhost"
 	}
 

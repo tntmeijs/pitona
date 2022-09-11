@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	debugSerialPortName               = "OBD-II_DEBUG"
 	serialPortName                    = "/dev/ttyUSB0"
 	serialPortBaudRate                = 9_600
 	serialPortReadTimeoutMilliseconds = 5_000
@@ -25,14 +26,23 @@ type Instance struct {
 // Connect establishes a connection with a serial port
 //
 // The application will exit with code 1 if the connection could not be established
-func (instance *Instance) Connect() {
+func (instance *Instance) Connect(isDebug bool) {
 	config := serial.Config{
 		Name:        serialPortName,
 		ReadTimeout: time.Millisecond * serialPortReadTimeoutMilliseconds,
 		Baud:        serialPortBaudRate,
 	}
 
-	log.Println("Opening serial port connection")
+	// Debug mode uses a different serial port name to make it possible to run an OBD-II emulator
+	// on a local development machine: https://github.com/Ircama/ELM327-emulator
+	//
+	// If you use a Windows machine, you should use a null-modem emulator such as:
+	// https://sourceforge.net/projects/com0com/
+	if isDebug {
+		config.Name = debugSerialPortName
+	}
+
+	log.Println("Opening serial port connection to port \"" + config.Name + "\"")
 	port, error := serial.OpenPort(&config)
 
 	if error != nil {
