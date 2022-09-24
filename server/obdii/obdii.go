@@ -14,7 +14,7 @@ const (
 	serialPortName                    = "/dev/ttyUSB0"
 	serialPortBaudRate                = 9_600
 	serialPortReadTimeoutMilliseconds = 5_000
-	serialPortReadBufferSizeBytes     = 4_096
+	serialPortReadBufferSizeBytes     = 8
 )
 
 // Represents an OBD-II serial connection
@@ -75,25 +75,20 @@ func (instance *Instance) ShowStoredDiagnosticTroubleCodes() []string {
 		return troubleCodes
 	}
 
-	numberOfBytesReceived := len(data)
-
-	if numberOfBytesReceived <= 4 {
-		// Two or fewer DTCs received - process in single-frame mode
-		for i := 0; i < len(data); i += 2 {
-			troubleCodes = append(troubleCodes, BytesToDtc(data[i], data[i+1]))
-		}
-	} else {
-		log.Println("Received more than 2 DTCs - this is not supported (yet)")
-		log.Print("Raw binary data (decimal): ")
-		log.Println(data)
+	initialFrame := isoTpFrame{}
+	if error := initialFrame.parse(data...); error != nil {
+		log.Println("Unable to parse frame: " + error.Error())
+		return troubleCodes
 	}
+
+	troubleCodes = append(troubleCodes, "TODO")
 
 	return troubleCodes
 }
 
 // Send an OBD-II command to the ECU and wait for a response
 //
-// This operation will block until data is received, or the operation times out
+// This operation will block until data is received, or until the operation times out
 func (instance *Instance) sendAndWaitForAnswer(command []byte) ([]byte, error) {
 	_, error := instance.port.Write(command)
 
@@ -113,4 +108,25 @@ func (instance *Instance) sendAndWaitForAnswer(command []byte) ([]byte, error) {
 	// Successful read
 	log.Println("Successfully read " + strconv.Itoa(size) + " bytes from serial port")
 	return instance.readBuffer[:size], nil
+}
+
+// Send an OBD-II command to the ECU and wait for N bytes to be returned
+//
+// This operation will block until all data is received, or until the operation times out
+func (instance *Instance) sendAndWaitForMultipleAnswers(command []byte, expectedBytes int) ([]byte, error) {
+	received := make([]byte, 0)
+
+	for {
+		data, error := instance.sendAndWaitForAnswer(command)
+
+		if error != nil {
+			return nil, error
+		}
+
+		received = append(received, data...)
+
+		if len(received) >= expectedBytes {
+			return received, nil
+		}
+	}
 }
