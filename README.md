@@ -64,6 +64,11 @@ issues, or other problems that might arise from the use of this software.
 
 # Development log
 ## September
+### 10<sup>th</sup> of September 2022
+- Discovered that the `3033` "DTC" is not really a fault code. Instead, this response is most
+  likely the start of a ISO-TP frame. Parsing this data is relatively difficult, which is why I
+  will work on it once the application is a bit more mature.
+
 ### 5<sup>th</sup> of September 2022
 - Major refactor of the codebase
 - New structure makes it easier to add new functionality
