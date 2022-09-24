@@ -7,7 +7,6 @@ import (
 )
 
 type systemStatusApi struct {
-	Endpoint string
 }
 
 func (api systemStatusApi) ServeHTTP(response http.ResponseWriter, request *http.Request) {

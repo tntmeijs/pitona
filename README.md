@@ -1,22 +1,23 @@
 # PiTona
 <a title="NathanLee at English Wikipedia, Public domain, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:TriumphDaytona675Side.jpg"><img width="512" alt="TriumphDaytona675Side" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/TriumphDaytona675Side.jpg/512px-TriumphDaytona675Side.jpg"></a>
 
-Welcome to the PiTona project! This project is an educational project to learn more about the OBD2
-protocol and the [Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
+Welcome to the PiTona project! This project is an educational project to learn more about the
+[OBD-II](https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II) protocol and the
+[Raspberry Pi](https://www.raspberrypi.com/) microprocessor.
 
 ## Prerequisites
 - Raspberry Pi with WiFi and USB connectivity.
-- Pre 2013 Triumph Daytona 675 (these ECUs are not as locked-down as the newer ones).
+- Pre 2013 Triumph Daytona 675 (these ECUs are not encrypted).
 
 ## Motivation
-When I'm not writing code, I enjoy being out and about on my beloved Triump Daytona 675.
+When I'm not writing code, I enjoy being out and about on my Triump Daytona 675.
 
-Unfortunately, I recently saw the infamous "check engine" light come on. Since I do not have access
-to any OBD2 tools to read the ECU, I figured it'd be fun to write a little something myself. And
-thus, the "PiTona" project was born!
+Unfortunately, I recently saw the "check engine" light come on. Since I do not have access to any
+OBD2 tools to read the ECU, I figured it'd be fun to write a little something myself. And thus, the
+"PiTona" project was born!
 
 I don't know how far I'm going to take this, but ultimately I'd like to at least be able to read my
-bike's error code. Once I manage to do that, I'll see how far I can push my skills.
+bike's error code. Once I manage to do that, I'll see how far I can push it.
 
 ## Goals
 The main purpose of this project is to see if it is possible to read OBD2 data from the onboard
@@ -33,6 +34,27 @@ and fuel efficiency!
 - [Go](https://go.dev/): host server programming language
 - [React Native](https://reactnative.dev/): smartphone client programming language
 - [Bulma](https://bulma.io/): super neat CSS framework to make everything look pretty
+
+## Endpoints
+The following endpoints can be used to interface with the Daytona 675's ECU:
+- <span style="color:#27ae60">GET</span> `/api/v1/obdii/debug` - ⚠ **DANGER** ⚠ send raw data to the ECU (use with caution)
+- <span style="color:#27ae60">GET</span> `/api/v1/obdii/01` - Send a supported PID from [mode 01](https://en.wikipedia.org/wiki/OBD-II_PIDs#Service_01_-_Show_current_data)
+- <span style="color:#27ae60">GET</span> `/api/v1/obdii/03` - Request active DTC  from [mode 03](https://en.wikipedia.org/wiki/OBD-II_PIDs#Service_03_-_Show_stored_Diagnostic_Trouble_Codes_(DTCs))
+- <span style="color:#27ae60">GET</span> `/api/v1/system/status` - Show Raspberry Pi system information
+- <span style="color:#e74c3c">DELETE</span> `/server` - Gracefully stop the server
+
+## Supported PIDs
+The list below contains all PIDs that have been confirmed to work on my 2008 Triumph Daytona 675.
+
+### Service 01 - show current data
+| PID (HEX) | Description                        | Comments |
+| --------- | ---------------------------------- | -------- |
+| 00        | List supported PIDs [0x01 to 0x20] |          |
+
+### Service 03 - show stored DTC
+| PID (HEX) | Description         | Comments                                                                                                      |
+| --------- | ------------------- | ------------------------------------------------------------------------------------------------------------- |
+| N/A       | List all stored DTC | Not implemented yet - need to implement the [ISO 15765-2](https://en.wikipedia.org/wiki/ISO_15765-2) protocol |
 
 ## Help
 > Services will not boot after updating the configuration files, even though the files are correct.
@@ -64,6 +86,11 @@ issues, or other problems that might arise from the use of this software.
 
 # Development log
 ## September
+### 24<sup>th</sup> of September 2022
+- Code clean-up
+- Update README to include endpoint and PID documentation
+- Add debug endpoint to send arbitrary data to the ECU
+
 ### 10<sup>th</sup> of September 2022
 - Discovered that the `3033` "DTC" is not really a fault code. Instead, this response is most
   likely the start of a ISO-TP frame. Parsing this data is relatively difficult, which is why I

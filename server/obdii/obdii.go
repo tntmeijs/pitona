@@ -6,14 +6,13 @@ import (
 	"time"
 
 	"github.com/tarm/serial"
-	"github.com/tntmeijs/pitona/server/utility"
 )
 
 const (
 	debugSerialPortName               = "OBD-II_DEBUG"
 	serialPortName                    = "/dev/ttyUSB0"
 	serialPortBaudRate                = 9_600
-	serialPortReadTimeoutMilliseconds = 5_000
+	serialPortReadTimeoutMilliseconds = 250
 	serialPortReadBufferSizeBytes     = 8
 )
 
@@ -68,7 +67,7 @@ func (instance *Instance) Disconnect() {
 // - https://en.wikipedia.org/wiki/OBD-II_PIDs#Service_03_-_Show_stored_Diagnostic_Trouble_Codes_(DTCs)
 func (instance *Instance) ShowStoredDiagnosticTroubleCodes() []string {
 	troubleCodes := make([]string, 0)
-	data, error := instance.sendAndWaitForAnswer([]byte(modeShowStoredDtc))
+	data, error := instance.SendAndWaitForAnswer([]byte(modeShowStoredDtc), -1)
 
 	if error != nil {
 		log.Println("Failed to fetch DTCs: " + error.Error())
@@ -89,7 +88,7 @@ func (instance *Instance) ShowStoredDiagnosticTroubleCodes() []string {
 // Send an OBD-II command to the ECU and wait for a response
 //
 // This operation will block until data is received, or until the operation times out
-func (instance *Instance) sendAndWaitForAnswer(command []byte) ([]byte, error) {
+func (instance *Instance) SendAndWaitForAnswer(command []byte, expectedBytes int) ([]byte, error) {
 	_, error := instance.port.Write(command)
 
 	// Unable to write to port
@@ -98,35 +97,17 @@ func (instance *Instance) sendAndWaitForAnswer(command []byte) ([]byte, error) {
 		return nil, error
 	}
 
-	size, _ := instance.port.Read(instance.readBuffer)
-
-	// Read timeout
-	if size == 0 {
-		return nil, utility.GenericErrorMessage{Message: "Serial read timed out because zero bytes were returned"}
-	}
-
-	// Successful read
-	log.Println("Successfully read " + strconv.Itoa(size) + " bytes from serial port")
-	return instance.readBuffer[:size], nil
-}
-
-// Send an OBD-II command to the ECU and wait for N bytes to be returned
-//
-// This operation will block until all data is received, or until the operation times out
-func (instance *Instance) sendAndWaitForMultipleAnswers(command []byte, expectedBytes int) ([]byte, error) {
-	received := make([]byte, 0)
+	data := []byte{}
 
 	for {
-		data, error := instance.sendAndWaitForAnswer(command)
+		size, _ := instance.port.Read(instance.readBuffer)
+		data = append(data, instance.readBuffer[:size]...)
 
-		if error != nil {
-			return nil, error
-		}
-
-		received = append(received, data...)
-
-		if len(received) >= expectedBytes {
-			return received, nil
+		if size == 0 || (len(data) == expectedBytes) {
+			break
 		}
 	}
+
+	log.Println("Read " + strconv.Itoa(len(data)) + " bytes from serial port")
+	return data, nil
 }

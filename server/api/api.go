@@ -38,14 +38,19 @@ func (apiServer *ApiServer) Start(isDebug bool, port int) {
 		address = "localhost"
 	}
 
-	// Create all endpoints
-	obdiiCommandApiHandler := obdiiDiagnosticTroubleCodeApi{Endpoint: "/api/v1/obdii/dtc", ObdiiInstance: apiServer.ObdiiInstance}
-	systemStatusApiHandler := systemStatusApi{Endpoint: "/api/v1/system/status"}
+	endpoints := make(map[string]http.Handler)
+
+	// Configure endpoint routing
+	endpoints["/api/v1/obdii/debug"] = obdiiDebugApi{ObdiiInstance: apiServer.ObdiiInstance}
+	endpoints["/api/v1/obdii/01"] = odbiiMode01Api{ObdiiInstance: apiServer.ObdiiInstance}
+	endpoints["/api/v1/obdii/03"] = obdiiMode03Api{ObdiiInstance: apiServer.ObdiiInstance}
+	endpoints["/api/v1/system/status"] = systemStatusApi{}
 
 	// Register all endpoints with the webserver
 	log.Println("Registering all HTTP handlers")
-	http.Handle(obdiiCommandApiHandler.Endpoint, obdiiCommandApiHandler)
-	http.Handle(systemStatusApiHandler.Endpoint, systemStatusApiHandler)
+	for endpoint, handler := range endpoints {
+		http.Handle(endpoint, handler)
+	}
 
 	// Register a special endpoint that can be used to gracefully stop the server
 	http.HandleFunc("/server", func(response http.ResponseWriter, request *http.Request) {
