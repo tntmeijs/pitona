@@ -32,7 +32,7 @@ and fuel efficiency!
 ## Technology stack
 - [Raspberry Pi](https://www.raspberrypi.com/): hardware on which this whole thing runs
 - [Go](https://go.dev/): host server programming language
-- [React Native](https://reactnative.dev/): smartphone client programming language
+- [React](https://reactjs.org/): front-end framework
 - [Bulma](https://bulma.io/): super neat CSS framework to make everything look pretty
 
 ## Endpoints
