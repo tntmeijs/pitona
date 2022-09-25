@@ -52,6 +52,10 @@ func (apiServer *ApiServer) Start(isDebug bool, port int) {
 		http.Handle(endpoint, handler)
 	}
 
+	// Serve the /public directory
+	log.Println("Using /public as file server root directory")
+	http.Handle("/", http.FileServer(http.Dir("./public")))
+
 	// Register a special endpoint that can be used to gracefully stop the server
 	http.HandleFunc("/server", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method != http.MethodDelete {

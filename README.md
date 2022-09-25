@@ -87,6 +87,7 @@ issues, or other problems that might arise from the use of this software.
 # Development log
 ## September
 ### 25<sup>th</sup> of September 2022
+- Add file serving capability to webserver
 - Add client React project boilerplate code
 - Add build script to automatically create a [tarball](https://en.wikipedia.org/wiki/Tar_(computing))
 
