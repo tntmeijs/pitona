@@ -18,11 +18,13 @@ const (
 
 // Represents an OBD-II serial connection
 type Instance struct {
-	port       *serial.Port
-	readBuffer []byte
+	port         *serial.Port
+	readBuffer   []byte
+	ecuRequests  chan EcuRequest
+	ecuResponses chan EcuResponse
 }
 
-// Connect establishes a connection with a serial port
+// Connect establishes a connection with a serial port and opens communication channels
 //
 // The application will exit with code 1 if the connection could not be established
 func (instance *Instance) Connect(isDebug bool) {
@@ -51,50 +53,68 @@ func (instance *Instance) Connect(isDebug bool) {
 	log.Println("Successfully connected to serial port")
 	instance.port = port
 	instance.readBuffer = make([]byte, serialPortReadBufferSizeBytes)
+	instance.ecuRequests = make(chan EcuRequest)
+	instance.ecuResponses = make(chan EcuResponse)
+
+	go instance.process()
 }
 
-// Disconnect closes the active serial port
+// Disconnect closes the active serial port and closes communication channels
 func (instance *Instance) Disconnect() {
 	instance.port.Close()
+	close(instance.ecuRequests)
+	close(instance.ecuResponses)
 }
 
-// Show stored diagnostic trobule codes (DTC)
-//
-// References:
-//
-// - https://en.wikipedia.org/wiki/ISO_15765-2
-//
-// - https://en.wikipedia.org/wiki/OBD-II_PIDs#Service_03_-_Show_stored_Diagnostic_Trouble_Codes_(DTCs)
-func (instance *Instance) ShowStoredDiagnosticTroubleCodes() []string {
-	troubleCodes := make([]string, 0)
-	data, error := instance.SendAndWaitForAnswer([]byte(modeShowStoredDtc), -1)
+// Get a write-only channel to communicate with the ECU
+func (instance *Instance) GetEcuRequestsChannel() chan<- EcuRequest {
+	return instance.ecuRequests
+}
 
-	if error != nil {
-		log.Println("Failed to fetch DTCs: " + error.Error())
-		return troubleCodes
+// Get a read-only channel to listen to the ECU
+func (instance *Instance) GetEcuResponsesChannel() <-chan EcuResponse {
+	return instance.ecuResponses
+}
+
+// OBD-II message processing loop
+func (instance *Instance) process() {
+	for ecuRequest := range instance.ecuRequests {
+		log.Println("Received ECU request", ecuRequest)
+
+		response := EcuResponse{}
+
+		// TODO: add support for sending multiple PIDs in a single command
+		for _, pid := range ecuRequest.Pids {
+			request := pid.Mode + pid.Pid
+			data, err := instance.SendAndWaitForAnswer([]byte(request), pid.ResponseSizeInBytes)
+
+			if err != nil {
+				log.Println("Failed to retrieve response from ECU:", err)
+				continue
+			}
+
+			// TODO: Find a way to parse PIDs
+			response.Pids = append(response.Pids, PidResponse{
+				Mode: pid.Mode,
+				Pid:  pid.Pid,
+				Data: string(data),
+			})
+		}
+
+		instance.ecuResponses <- response
 	}
-
-	initialFrame := isoTpFrame{}
-	if error := initialFrame.parse(data...); error != nil {
-		log.Println("Unable to parse frame: " + error.Error())
-		return troubleCodes
-	}
-
-	troubleCodes = append(troubleCodes, "TODO")
-
-	return troubleCodes
 }
 
 // Send an OBD-II command to the ECU and wait for a response
 //
 // This operation will block until data is received, or until the operation times out
 func (instance *Instance) SendAndWaitForAnswer(command []byte, expectedBytes int) ([]byte, error) {
-	_, error := instance.port.Write(command)
+	_, err := instance.port.Write(command)
 
 	// Unable to write to port
-	if error != nil {
-		log.Println("Failed to write to serial port: " + error.Error())
-		return nil, error
+	if err != nil {
+		log.Println("Failed to write to serial port:", err)
+		return nil, err
 	}
 
 	data := []byte{}
@@ -103,7 +123,7 @@ func (instance *Instance) SendAndWaitForAnswer(command []byte, expectedBytes int
 		size, _ := instance.port.Read(instance.readBuffer)
 		data = append(data, instance.readBuffer[:size]...)
 
-		if size == 0 || (len(data) == expectedBytes) {
+		if size == 0 || (len(data) >= expectedBytes) {
 			break
 		}
 	}

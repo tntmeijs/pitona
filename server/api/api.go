@@ -6,12 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/websocket"
 	"github.com/tntmeijs/pitona/server/obdii"
 )
-
-const contentTypeHeader = "Content-Type"
-const mimeTypeText = "text/plain"
-const mimeTypeJson = "application/json"
 
 // ApiServer represents a simple REST API server that allows the outside world to send and receive
 // commands from the motorcycle's onboard ECU
@@ -20,6 +17,11 @@ type ApiServer struct {
 	server           http.Server
 	initiateShutdown chan struct{}
 	shutdownComplete chan struct{}
+}
+
+// Create a new API server
+func NewApiServer(obdiiInstance *obdii.Instance) ApiServer {
+	return ApiServer{ObdiiInstance: obdiiInstance}
 }
 
 // Start the API server and block until the server (gracefully) shuts down
@@ -38,19 +40,15 @@ func (apiServer *ApiServer) Start(isDebug bool, port int) {
 		address = "localhost"
 	}
 
-	endpoints := make(map[string]http.Handler)
+	// WebSocket handler
+	ws := NewWebSocketHandler(
+		apiServer.ObdiiInstance.GetEcuRequestsChannel(),
+		apiServer.ObdiiInstance.GetEcuResponsesChannel(),
+		websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool { return isDebug },
+		})
 
-	// Configure endpoint routing
-	endpoints["/api/v1/obdii/debug"] = obdiiDebugApi{ObdiiInstance: apiServer.ObdiiInstance}
-	endpoints["/api/v1/obdii/01"] = odbiiMode01Api{ObdiiInstance: apiServer.ObdiiInstance}
-	endpoints["/api/v1/obdii/03"] = obdiiMode03Api{ObdiiInstance: apiServer.ObdiiInstance}
-	endpoints["/api/v1/system/status"] = systemStatusApi{}
-
-	// Register all endpoints with the webserver
-	log.Println("Registering all HTTP handlers")
-	for endpoint, handler := range endpoints {
-		http.Handle(endpoint, handler)
-	}
+	http.Handle("/ws", &ws)
 
 	// Serve the /public directory
 	log.Println("Using /public as file server root directory")

@@ -24,7 +24,7 @@ func main() {
 	instance.Connect(isDebug)
 	defer instance.Disconnect()
 
-	server := api.ApiServer{ObdiiInstance: &instance}
+	server := api.NewApiServer(&instance)
 	server.Start(isDebug, port)
 	log.Println("Application exited successfully")
 }
