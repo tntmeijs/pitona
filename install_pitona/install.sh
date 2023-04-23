@@ -1,4 +1,6 @@
 #!/bin/bash
+# Reference for the network setup found blow: https://www.raspberrypi.com/documentation/computers/configuration.html#setting-up-a-routed-wireless-access-point
+
 if [[ $EUID > 0 ]]
   then echo "Please run this script as root"
   exit -1
@@ -13,8 +15,15 @@ echo "Type \"yes\" to install - since you did not, the installation will be abor
 exit 0
 fi
 
-# Reference for this script:
-# https://www.raspberrypi.com/documentation/computers/configuration.html#setting-up-a-routed-wireless-access-point
+# Update the system first
+apt-get update
+apt-get upgrade --yes
+
+# MariaDB is used to communicate between the website and the application that reads from the ECU
+echo "====================="
+echo "Installing MariaDB..."
+echo "====================="
+apt install mariadb-server
 
 # HostAPD is used to turn this device into an access point
 echo "====================="
